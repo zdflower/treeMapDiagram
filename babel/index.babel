@@ -4,15 +4,21 @@
 
 const DATA_URL = "https://cdn.rawgit.com/freeCodeCamp/testable-projects-fcc/a80ce8f9/src/data/tree_map/kickstarter-funding-data.json";
 
+// Hasta que entienda mejor cómo usar los datos para definir el dominio de la escala de color, explicito las categorías.
+const CATEGORIAS = ["Kickstarter", "Drinks", "Gadgets", "Art", "Apparel", "Sculpture", "Games", "Food", "Wearables", "Web", "Gaming Hardware", "Television", "Narrative Film", "3D Printing", "Hardware", "Technology", "Sound", "Video Games", "Tabletop Games", "Product Design"];
+
     const w = 1000;
     const h = 450;
     const padding = 60;
     const margin = {right: 20, left: 20, top: 40, bottom: 40}; 
     
-    // const color = d3.scaleOrdinal();
+    const color = d3.scaleOrdinal()
+    .range(d3.schemePiYG[7]);
     // color.range(["red", "blue", "green"])
- 	 //    			.attr("fill", (d)=> d.children ? "orange" : color(d.parent.category)
+ 	 // .attr("fill", (d)=> d.children ? "orange" : color(d.parent.category)
     
+const tooltip = d3.select("body").append("div").attr("id", "tooltip").style("opacity", 0);
+
     const svg = d3.select("body")
                   .append("svg")
                   .attr("width", w + margin.right + margin.left)
@@ -38,7 +44,7 @@ const DATA_URL = "https://cdn.rawgit.com/freeCodeCamp/testable-projects-fcc/a80c
     // D3 in Depth http://d3indepth.com/layouts
     const treemapLayout = d3.treemap();
     treemapLayout.size([w - margin.right - margin.left, h - margin.top - margin.bottom])
-                 .paddingOuter(10);
+                 .paddingOuter(5);
   
 	d3.queue().defer(d3.json, DATA_URL).await(ready);
 
@@ -52,8 +58,12 @@ const DATA_URL = "https://cdn.rawgit.com/freeCodeCamp/testable-projects-fcc/a80c
     	
     	svg.append("g").attr("transform", "translate(" + 40 + "," + 40 + ")");
     	
+      // el dominio deberían ser los nombres de las categorías de los datos
+      //console.error(root.descendants())
+      color.domain(CATEGORIAS);
+      
   		svg.selectAll("rect")
-     			.data(root.descendants())
+     			.data(root.leaves())
        		.enter()
        		.append("rect")
        			.attr('class', 'tile')
@@ -61,20 +71,27 @@ const DATA_URL = "https://cdn.rawgit.com/freeCodeCamp/testable-projects-fcc/a80c
        			.attr('y', (d) => d.y0)
        			.attr('width', (d) => d.x1 - d.x0)
        			.attr('height', (d) => d.y1 - d.y0)
-       			.attr("fill", (d)=> d.children ? "orange" : "green")
+       			.attr("fill", (d) => {
+        //console.error(d);
+        return d.children ? "orange" : color(d.parent.data.name)})
        			.attr('data-name', (d) => d.data.name)
        			.attr('data-category', (d) => d.data.category)
        			.attr('data-value', (d) => d.data.value)
-       			.append("title").text((d)=> {
-       				const name = d.data.name;
-       				const category = d.data.category;
-       				const value = d.data.value;
-       				let text = '';
-       				if (name) {	text += name }
-						if (category){ text += ' - ' + category}
-						if (value){ text += ' - ' + value}
-						
-       			return text;
-       			});
+       	.on("mouseover", (d) => {
+        tooltip.attr('data-value', d.data.value);
+tooltip.transition().duration(200).style("opacity", 0.9);
+     const name = d.data.name;
+     const category = d.data.category.toUpperCase();
+     const value = d.data.value;
+     let text = '';
+     if (name) {	text += '<p><strong>' + name + '</strong></p>'}
+		 if (category){ text += '<p>' + category + '</p>'}
+		 if (value){ text += '<p>' + value + '</p>'}
+     tooltip.html(text);
+     tooltip.style("left", (d3.event.pageX) + "px")     
+               .style("top", (d3.event.pageY - 28) + "px");
+      })
+      .on("mouseout", () => tooltip.transition().duration(500).style("opacity", 0))		
+        
    	}    
 	}

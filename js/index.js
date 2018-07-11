@@ -4,14 +4,19 @@
 
 var DATA_URL = "https://cdn.rawgit.com/freeCodeCamp/testable-projects-fcc/a80ce8f9/src/data/tree_map/kickstarter-funding-data.json";
 
+// Hasta que entienda mejor cómo usar los datos para definir el dominio de la escala de color, explicito las categorías.
+var CATEGORIAS = ["Kickstarter", "Drinks", "Gadgets", "Art", "Apparel", "Sculpture", "Games", "Food", "Wearables", "Web", "Gaming Hardware", "Television", "Narrative Film", "3D Printing", "Hardware", "Technology", "Sound", "Video Games", "Tabletop Games", "Product Design"];
+
 var w = 1000;
 var h = 450;
 var padding = 60;
 var margin = { right: 20, left: 20, top: 40, bottom: 40 };
 
-// const color = d3.scaleOrdinal();
+var color = d3.scaleOrdinal().range(d3.schemePiYG[7]);
 // color.range(["red", "blue", "green"])
-//    			.attr("fill", (d)=> d.children ? "orange" : color(d.parent.category)
+// .attr("fill", (d)=> d.children ? "orange" : color(d.parent.category)
+
+var tooltip = d3.select("body").append("div").attr("id", "tooltip").style("opacity", 0);
 
 var svg = d3.select("body").append("svg").attr("width", w + margin.right + margin.left).attr("height", h + margin.top + margin.bottom).append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -21,7 +26,7 @@ svg.append("text").attr("id", "description").attr("x", (w - margin.right - margi
 
 // D3 in Depth http://d3indepth.com/layouts
 var treemapLayout = d3.treemap();
-treemapLayout.size([w - margin.right - margin.left, h - margin.top - margin.bottom]).paddingOuter(10);
+treemapLayout.size([w - margin.right - margin.left, h - margin.top - margin.bottom]).paddingOuter(5);
 
 d3.queue().defer(d3.json, DATA_URL).await(ready);
 
@@ -38,7 +43,11 @@ function ready(error, data) {
 
     svg.append("g").attr("transform", "translate(" + 40 + "," + 40 + ")");
 
-    svg.selectAll("rect").data(root.descendants()).enter().append("rect").attr('class', 'tile').attr('x', function (d) {
+    // el dominio deberían ser los nombres de las categorías de los datos
+    //console.error(root.descendants())
+    color.domain(CATEGORIAS);
+
+    svg.selectAll("rect").data(root.leaves()).enter().append("rect").attr('class', 'tile').attr('x', function (d) {
       return d.x0;
     }).attr('y', function (d) {
       return d.y0;
@@ -47,29 +56,34 @@ function ready(error, data) {
     }).attr('height', function (d) {
       return d.y1 - d.y0;
     }).attr("fill", function (d) {
-      return d.children ? "orange" : "green";
+      //console.error(d);
+      return d.children ? "orange" : color(d.parent.data.name);
     }).attr('data-name', function (d) {
       return d.data.name;
     }).attr('data-category', function (d) {
       return d.data.category;
     }).attr('data-value', function (d) {
       return d.data.value;
-    }).append("title").text(function (d) {
+    }).on("mouseover", function (d) {
+      tooltip.attr('data-value', d.data.value);
+      tooltip.transition().duration(200).style("opacity", 0.9);
       var name = d.data.name;
-      var category = d.data.category;
+      var category = d.data.category.toUpperCase();
       var value = d.data.value;
       var text = '';
       if (name) {
-        text += name;
+        text += '<p><strong>' + name + '</strong></p>';
       }
       if (category) {
-        text += ' - ' + category;
+        text += '<p>' + category + '</p>';
       }
       if (value) {
-        text += ' - ' + value;
+        text += '<p>' + value + '</p>';
       }
-
-      return text;
+      tooltip.html(text);
+      tooltip.style("left", d3.event.pageX + "px").style("top", d3.event.pageY - 28 + "px");
+    }).on("mouseout", function () {
+      return tooltip.transition().duration(500).style("opacity", 0);
     });
   }
 }

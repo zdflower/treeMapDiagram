@@ -1,18 +1,19 @@
 /* https://codepen.io/zdflower/pen/RyPQKy */
 #tooltip {
   position: absolute;           
-  text-align: left;           
-  width: 40px;                  
-  height:20px;                 
+  text-align: center;           
+  width: 140px;                  
+  height:120px;                 
   padding: 10px;             
   font: 12px sans-serif;        
-  background: beige;
-  color: purple;
+  background: green;
+  color: beige;
   border: 1px;
   border-color: purple;      
-  border-radius: 8px;           
+  border-radius: 0 10px;           
   pointer-events: none;
   z-index: 2;
+  
 }
 
 rect {
