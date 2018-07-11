@@ -4,7 +4,7 @@ Data visualization: Tree Map Diagram with D3 - Free Code Camp
 https://learn.freecodecamp.org/data-visualization/data-visualization-projects/visualize-data-with-a-treemap-diagram
 
 ## User stories
-- [ ] #1: My tree map should have a title with a corresponding id="title".
+- [x] #1: My tree map should have a title with a corresponding id="title".
 - [ ] #2: My tree map should have a description with a corresponding id="description".
 - [ ] #3: My tree map should have rect elements with a corresponding class="tile" that represent the data.
 - [ ] #4: There should be at least 2 different fill colors used for the tiles.
@@ -22,3 +22,4 @@ https://learn.freecodecamp.org/data-visualization/data-visualization-projects/vi
 - http://bl.ocks.org/d3noob/8375092
 - https://github.com/d3/d3-hierarchy
 - https://d3-wiki.readthedocs.io/zh_CN/master/Treemap-Layout/
+- D3 in Depth- Layouts http://d3indepth.com/layouts
