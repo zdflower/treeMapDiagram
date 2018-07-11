@@ -1,6 +1,7 @@
 // TO DO:
-// agregar una leyenda con id="legend"
-// agregar un tooltip
+// Agregar una leyenda con id="legend"
+// Usar una escala de colores con uno para cada categoría.
+// Agregar texto sobre los rectángulos, en la posición correspondiente.
 
 var DATA_URL = "https://cdn.rawgit.com/freeCodeCamp/testable-projects-fcc/a80ce8f9/src/data/tree_map/kickstarter-funding-data.json";
 
@@ -22,7 +23,7 @@ var svg = d3.select("body").append("svg").attr("width", w + margin.right + margi
 
 svg.append("text").attr("id", "title").attr("x", (w - margin.right - margin.left) / 2).attr("y", 0 - margin.top / 2).attr("text-anchor", "middle").text("Kickstarter funding data");
 
-svg.append("text").attr("id", "description").attr("x", (w - margin.right - margin.left) / 2).attr("y", h - margin.bottom / 2).attr("text-anchor", "middle").text("Description");
+svg.append("text").attr("id", "description").attr("x", (w - margin.right - margin.left) / 2).attr("y", h - margin.bottom / 2).attr("text-anchor", "middle").text("Top 100 Most Pledged Kickstarter Campaigns Grouped By Category");
 
 // D3 in Depth http://d3indepth.com/layouts
 var treemapLayout = d3.treemap();

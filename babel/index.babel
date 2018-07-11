@@ -1,6 +1,7 @@
   // TO DO:
-	// agregar una leyenda con id="legend"
-	// agregar un tooltip
+	// Agregar una leyenda con id="legend"
+	// Usar una escala de colores con uno para cada categoría.
+ // Agregar texto sobre los rectángulos, en la posición correspondiente.
 
 const DATA_URL = "https://cdn.rawgit.com/freeCodeCamp/testable-projects-fcc/a80ce8f9/src/data/tree_map/kickstarter-funding-data.json";
 
@@ -38,7 +39,7 @@ const tooltip = d3.select("body").append("div").attr("id", "tooltip").style("opa
 		.attr("x", ((w - margin.right - margin.left)/ 2))
 		.attr("y", h - (margin.bottom / 2))
 		.attr("text-anchor", "middle")
-		.text("Description");
+		.text("Top 100 Most Pledged Kickstarter Campaigns Grouped By Category");
                   
 
     // D3 in Depth http://d3indepth.com/layouts
@@ -91,7 +92,6 @@ tooltip.transition().duration(200).style("opacity", 0.9);
      tooltip.style("left", (d3.event.pageX) + "px")     
                .style("top", (d3.event.pageY - 28) + "px");
       })
-      .on("mouseout", () => tooltip.transition().duration(500).style("opacity", 0))		
-        
+      .on("mouseout", () => tooltip.transition().duration(500).style("opacity", 0))        
    	}    
 	}
