@@ -1,0 +1,80 @@
+  // TO DO:
+	// agregar una leyenda con id="legend"
+	// agregar un tooltip
+
+const DATA_URL = "https://cdn.rawgit.com/freeCodeCamp/testable-projects-fcc/a80ce8f9/src/data/tree_map/kickstarter-funding-data.json";
+
+    const w = 1000;
+    const h = 450;
+    const padding = 60;
+    const margin = {right: 20, left: 20, top: 40, bottom: 40}; 
+    
+    // const color = d3.scaleOrdinal();
+    // color.range(["red", "blue", "green"])
+ 	 //    			.attr("fill", (d)=> d.children ? "orange" : color(d.parent.category)
+    
+    const svg = d3.select("body")
+                  .append("svg")
+                  .attr("width", w + margin.right + margin.left)
+                  .attr("height", h + margin.top + margin.bottom)
+                  .append("g")
+                  	.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+	
+	svg.append("text")
+		.attr("id", "title")
+		.attr("x", ((w - margin.right - margin.left)/ 2))
+		.attr("y", 0 - (margin.top / 2))
+		.attr("text-anchor", "middle")
+		.text("Kickstarter funding data");
+		
+   svg.append("text")
+		.attr("id", "description")
+		.attr("x", ((w - margin.right - margin.left)/ 2))
+		.attr("y", h - (margin.bottom / 2))
+		.attr("text-anchor", "middle")
+		.text("Description");
+                  
+
+    // D3 in Depth http://d3indepth.com/layouts
+    const treemapLayout = d3.treemap();
+    treemapLayout.size([w - margin.right - margin.left, h - margin.top - margin.bottom])
+                 .paddingOuter(10);
+  
+	d3.queue().defer(d3.json, DATA_URL).await(ready);
+
+	function ready(error, data){
+		if (error) console.error(error)
+		else {
+   		const root = d3.hierarchy(data);
+    	root.sum(d => d.value)
+      root.sort((a,b) => a.value - b.value);
+    	treemapLayout(root);
+    	
+    	svg.append("g").attr("transform", "translate(" + 40 + "," + 40 + ")");
+    	
+  		svg.selectAll("rect")
+     			.data(root.descendants())
+       		.enter()
+       		.append("rect")
+       			.attr('class', 'tile')
+       			.attr('x', (d) => d.x0)
+       			.attr('y', (d) => d.y0)
+       			.attr('width', (d) => d.x1 - d.x0)
+       			.attr('height', (d) => d.y1 - d.y0)
+       			.attr("fill", (d)=> d.children ? "orange" : "green")
+       			.attr('data-name', (d) => d.data.name)
+       			.attr('data-category', (d) => d.data.category)
+       			.attr('data-value', (d) => d.data.value)
+       			.append("title").text((d)=> {
+       				const name = d.data.name;
+       				const category = d.data.category;
+       				const value = d.data.value;
+       				let text = '';
+       				if (name) {	text += name }
+						if (category){ text += ' - ' + category}
+						if (value){ text += ' - ' + value}
+						
+       			return text;
+       			});
+   	}    
+	}
