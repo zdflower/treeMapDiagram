@@ -8,12 +8,36 @@ var DATA_URL = "https://cdn.rawgit.com/freeCodeCamp/testable-projects-fcc/a80ce8
 // Hasta que entienda mejor cómo usar los datos para definir el dominio de la escala de color, explicito las categorías.
 var CATEGORIAS = ["Kickstarter", "Drinks", "Gadgets", "Art", "Apparel", "Sculpture", "Games", "Food", "Wearables", "Web", "Gaming Hardware", "Television", "Narrative Film", "3D Printing", "Hardware", "Technology", "Sound", "Video Games", "Tabletop Games", "Product Design"];
 
+var color = {
+  "Kickstarter": 'red',
+  "Drinks": 'green',
+  "Gadgets": 'blue',
+  "Art": 'orange',
+  "Apparel": 'purple',
+  "Sculpture": 'lime',
+  "Games": 'violet',
+  "Food": 'darkgoldenrod',
+  "Wearables": 'teal',
+  "Web": 'olive',
+  "Gaming Hardware": 'navy',
+  "Television": 'maroon',
+  "Narrative Film": "burlywood",
+  "3D Printing": "coral",
+  "Hardware": "chartreuse",
+  "Technology": "crimson",
+  "Sound": "cadetblue",
+  "Video Games": "darkkhaki",
+  "Tabletop Games": "darkorchid",
+  "Product Design": "lightgreen"
+};
+
 var w = 1000;
 var h = 450;
 var padding = 60;
 var margin = { right: 20, left: 20, top: 40, bottom: 40 };
 
-var color = d3.scaleOrdinal().range(d3.schemePiYG[7]);
+//   const color = d3.scaleOrdinal()
+//   .range(d3.schemePiYG[7]);
 // color.range(["red", "blue", "green"])
 // .attr("fill", (d)=> d.children ? "orange" : color(d.parent.category)
 
@@ -46,7 +70,7 @@ function ready(error, data) {
 
     // el dominio deberían ser los nombres de las categorías de los datos
     //console.error(root.descendants())
-    color.domain(CATEGORIAS);
+    //   color.domain(CATEGORIAS);
 
     svg.selectAll("rect").data(root.leaves()).enter().append("rect").attr('class', 'tile').attr('x', function (d) {
       return d.x0;
@@ -58,7 +82,7 @@ function ready(error, data) {
       return d.y1 - d.y0;
     }).attr("fill", function (d) {
       //console.error(d);
-      return d.children ? "orange" : color(d.parent.data.name);
+      return d.children ? "orange" : color[d.parent.data.name];
     }).attr('data-name', function (d) {
       return d.data.name;
     }).attr('data-category', function (d) {
