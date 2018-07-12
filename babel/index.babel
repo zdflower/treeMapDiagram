@@ -8,13 +8,36 @@ const DATA_URL = "https://cdn.rawgit.com/freeCodeCamp/testable-projects-fcc/a80c
 // Hasta que entienda mejor cómo usar los datos para definir el dominio de la escala de color, explicito las categorías.
 const CATEGORIAS = ["Kickstarter", "Drinks", "Gadgets", "Art", "Apparel", "Sculpture", "Games", "Food", "Wearables", "Web", "Gaming Hardware", "Television", "Narrative Film", "3D Printing", "Hardware", "Technology", "Sound", "Video Games", "Tabletop Games", "Product Design"];
 
+var color = {
+  "Kickstarter": 'red',
+  "Drinks": 'green',
+  "Gadgets": 'blue', 
+  "Art": 'orange', 
+  "Apparel": 'purple', 
+  "Sculpture": 'lime', 
+  "Games": 'violet', 
+  "Food": 'darkgoldenrod',
+  "Wearables": 'teal',
+  "Web": 'olive',
+  "Gaming Hardware": 'navy',
+  "Television": 'maroon',
+  "Narrative Film": "burlywood",
+  "3D Printing": "coral",
+  "Hardware": "chartreuse",
+  "Technology": "crimson",
+  "Sound": "cadetblue",
+  "Video Games": "darkkhaki",
+  "Tabletop Games": "darkorchid",
+  "Product Design": "lightgreen"
+}
+
     const w = 1000;
     const h = 450;
     const padding = 60;
     const margin = {right: 20, left: 20, top: 40, bottom: 40}; 
     
-    const color = d3.scaleOrdinal()
-    .range(d3.schemePiYG[7]);
+ //   const color = d3.scaleOrdinal()
+ //   .range(d3.schemePiYG[7]);
     // color.range(["red", "blue", "green"])
  	 // .attr("fill", (d)=> d.children ? "orange" : color(d.parent.category)
     
@@ -61,7 +84,7 @@ const tooltip = d3.select("body").append("div").attr("id", "tooltip").style("opa
     	
       // el dominio deberían ser los nombres de las categorías de los datos
       //console.error(root.descendants())
-      color.domain(CATEGORIAS);
+   //   color.domain(CATEGORIAS);
       
   		svg.selectAll("rect")
      			.data(root.leaves())
@@ -74,7 +97,7 @@ const tooltip = d3.select("body").append("div").attr("id", "tooltip").style("opa
        			.attr('height', (d) => d.y1 - d.y0)
        			.attr("fill", (d) => {
         //console.error(d);
-        return d.children ? "orange" : color(d.parent.data.name)})
+        return d.children ? "orange" : color[d.parent.data.name]})
        			.attr('data-name', (d) => d.data.name)
        			.attr('data-category', (d) => d.data.category)
        			.attr('data-value', (d) => d.data.value)
@@ -94,4 +117,4 @@ tooltip.transition().duration(200).style("opacity", 0.9);
       })
       .on("mouseout", () => tooltip.transition().duration(500).style("opacity", 0))        
    	}    
-	}
+	}  
