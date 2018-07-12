@@ -10,9 +10,9 @@ https://learn.freecodecamp.org/data-visualization/data-visualization-projects/vi
 - [x] #4: There should be at least 2 different fill colors used for the tiles.
 - [x] #5: Each tile should have the properties data-name, data-category, and data-value containing their corresponding name, category, and value.
 - [x] #6: The area of each tile should correspond to the data-value amount: tiles with a larger data-value should have a bigger area.
-- [ ] #7: My tree map should have a legend with corresponding id="legend".
-- [ ] #8: My legend should have rect elements with a corresponding class="legend-item".
-- [ ] #9: The rect elements in the legend should use at least 2 different fill colors.
+- [x] #7: My tree map should have a legend with corresponding id="legend".
+- [x] #8: My legend should have rect elements with a corresponding class="legend-item".
+- [x] #9: The rect elements in the legend should use at least 2 different fill colors.
 - [x] #10: I can mouse over an area and see a tooltip with a corresponding id="tooltip" which displays more information about the area.
 - [x] #11: My tooltip should have a data-value property that corresponds to the data-value of the active area.
 
@@ -23,3 +23,6 @@ https://learn.freecodecamp.org/data-visualization/data-visualization-projects/vi
 - https://github.com/d3/d3-hierarchy
 - https://d3-wiki.readthedocs.io/zh_CN/master/Treemap-Layout/
 - D3 in Depth- Layouts http://d3indepth.com/layouts
+
+## Comments
+Needs a better legend and scale.
