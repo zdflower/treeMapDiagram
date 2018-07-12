@@ -1,7 +1,6 @@
   // TO DO:
-	// Agregar una leyenda con id="legend"
-	// Usar una escala de colores con uno para cada categoría.
- // Agregar texto sobre los rectángulos, en la posición correspondiente.
+	// Agregar texto sobre los rectángulos, en la posición correspondiente.
+// Mejorar todo.
 
 const DATA_URL = "https://cdn.rawgit.com/freeCodeCamp/testable-projects-fcc/a80ce8f9/src/data/tree_map/kickstarter-funding-data.json";
 
@@ -32,7 +31,7 @@ var color = {
 }
 
     const w = 1000;
-    const h = 450;
+    const h = 500;
     const padding = 60;
     const margin = {right: 20, left: 20, top: 40, bottom: 40}; 
     
@@ -40,17 +39,17 @@ var color = {
  //   .range(d3.schemePiYG[7]);
     // color.range(["red", "blue", "green"])
  	 // .attr("fill", (d)=> d.children ? "orange" : color(d.parent.category)
-    
+
 const tooltip = d3.select("body").append("div").attr("id", "tooltip").style("opacity", 0);
 
-    const svg = d3.select("body")
-                  .append("svg")
-                  .attr("width", w + margin.right + margin.left)
-                  .attr("height", h + margin.top + margin.bottom)
-                  .append("g")
-                  	.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-	
-	svg.append("text")
+const svg = d3.select("body")
+              .append("svg")
+              .attr("width", w + margin.right + margin.left)
+              .attr("height", h + margin.top + margin.bottom)
+              .append("g")
+              	.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+svg.append("text")
 		.attr("id", "title")
 		.attr("x", ((w - margin.right - margin.left)/ 2))
 		.attr("y", 0 - (margin.top / 2))
@@ -68,7 +67,7 @@ const tooltip = d3.select("body").append("div").attr("id", "tooltip").style("opa
     // D3 in Depth http://d3indepth.com/layouts
     const treemapLayout = d3.treemap();
     treemapLayout.size([w - margin.right - margin.left, h - margin.top - margin.bottom])
-                 .paddingOuter(5);
+                 .paddingOuter(10);
   
 	d3.queue().defer(d3.json, DATA_URL).await(ready);
 
@@ -96,7 +95,7 @@ const tooltip = d3.select("body").append("div").attr("id", "tooltip").style("opa
        			.attr('width', (d) => d.x1 - d.x0)
        			.attr('height', (d) => d.y1 - d.y0)
        			.attr("fill", (d) => {
-        //console.error(d);
+        // console.error(d);
         return d.children ? "orange" : color[d.parent.data.name]})
        			.attr('data-name', (d) => d.data.name)
        			.attr('data-category', (d) => d.data.category)
@@ -115,6 +114,57 @@ tooltip.transition().duration(200).style("opacity", 0.9);
      tooltip.style("left", (d3.event.pageX) + "px")     
                .style("top", (d3.event.pageY - 28) + "px");
       })
-      .on("mouseout", () => tooltip.transition().duration(500).style("opacity", 0))        
-   	}    
-	}  
+      .on("mouseout", () => tooltip.transition().duration(500).style("opacity", 0))
+      
+// Agregar etiquetas a las categorías
+// adaptado de http://d3indepth.com/layouts/
+    var nodes = d3.select('svg g')
+  .selectAll('g')
+  .data(root.descendants())
+  .enter()
+  .append('g')
+  .attr('transform', function(d) {return 'translate(' + [d.x0, d.y0] + ')'})
+
+nodes
+  .append('text')
+  .attr('dx', 4)
+  .attr('dy', 5)
+      .style("font-size", "0.6em")
+      .style("font-weight", "bold")
+      .style("text-transform", "uppercase")
+  .text(function(d) {
+  let name = '';
+  if (d.children) name = d.data.name;
+    return name;
+  })
+// fin agregado de etiquetas
+      
+} // ready function    
+    
+   const legend = d3.select("body").append("svg")
+   .attr("width", "400px")
+   .attr("height", "1000px")
+   .append("g").attr("id", "legend").attr("transform", "translate(" + 40 + "," + 20 + ")");
+	
+  // colour rectangles
+	legend.selectAll("rect")
+	.data(CATEGORIAS)
+	.enter()
+	.append("rect")
+	  .attr("fill", (d) => color[d])
+	  .attr("stroke", "black")
+	  .attr("stroke-width", "1px")
+	  .attr("width", 30)
+	  .attr("height", 20)
+	  .attr("x", 0)
+	  .attr("y", (d, i) => i * 20)
+    .attr("class", "legend-item")
+    
+  legend.selectAll("text")
+	.data(CATEGORIAS)
+	.enter()
+	.append("text")
+	  .attr("x", 40)
+	  .attr("y", (d, i) => 15 + i * 20)
+    .text(d => d)
+}
